@@ -26,30 +26,36 @@
     this.init();
   }
 
-  $.fn.jquery.slideUpdate = function(opts) {
+  $.fn.slideUpdate = function(opts) {
     return this.each(function() {
       new SlideUpdate(this, opts);
     });
   }
 
   SlideUpdate.prototype.init = function() {
-    var oldElement = $(this);
+    var selector = this.opts.selector;
+    var html = this.opts.html;
+    var text = this.opts.text
+
+    var oldElement = this.$el;
     var newElement;
 
     if (selector != '') {
-      newElement = $(selector).clone()
+      newElement = $(selector).clone();
     } else if (html != '') {
-      newElement = oldElement.clone()
+      newElement = oldElement.clone();
       newElement.html(html);
     } else if (text != '') {
-      newElement = oldElement.clone()
+      newElement = oldElement.clone();
       newElement.text(text);
     }
     newElement.hide();
 
     oldElement.after(newElement);
     newElement = oldElement.next();
-    oldElement.slideDown(500);
-    newElement.slideUp(500);
+    oldElement.slideUp(500, function() {
+      this.remove();
+    });
+    newElement.slideDown(500);
   };
 })(jQuery, document, window);
