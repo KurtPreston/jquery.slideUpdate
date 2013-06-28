@@ -14,13 +14,15 @@
     this.defaults = {
       text: '',
       html: '',
-      selector: ''
+      selector: '',
+      duration: 500
     }
 
     this.opts = $.extend(this.defaults, opts, {
       text: this.$el.data('slideupdate-text'),
       html: this.$el.data('slideupdate-html'),
-      selector: this.$el.data('slideupdate-selector')
+      selector: this.$el.data('slideupdate-selector'),
+      duration: this.$el.data('slideupdate-duration')
     });
 
     this.init();
@@ -33,13 +35,16 @@
   }
 
   SlideUpdate.prototype.init = function() {
+    // Load in options
     var selector = this.opts.selector;
     var html = this.opts.html;
-    var text = this.opts.text
+    var text = this.opts.text;
+    var duration = this.opts.duration;
 
     var oldElement = this.$el;
-    var newElement;
 
+    // Create new element
+    var newElement;
     if (selector != '') {
       newElement = $(selector).clone();
     } else if (html != '') {
@@ -51,11 +56,15 @@
     }
     newElement.hide();
 
+    // Swap out old element for new
     oldElement.after(newElement);
     newElement = oldElement.next();
-    oldElement.slideUp(500, function() {
-      this.remove();
+    oldElement.slideUp({
+      duration: duration,
+      complete: function() {
+        this.remove();
+      }
     });
-    newElement.slideDown(500);
+    newElement.slideDown(duration);
   };
 })(jQuery, document, window);
