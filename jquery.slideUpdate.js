@@ -8,7 +8,7 @@
 (function($, doc, win) {
   "use strict";
 
-  function SlideUpdate(el, opts){
+  function SlideUpdate(el, opts, callback){
     this.$el = $(el);
 
     this.defaults = {
@@ -25,12 +25,14 @@
       duration: this.$el.data('slideupdate-duration')
     });
 
+    this.callback = callback;
+
     this.init();
   }
 
-  $.fn.slideUpdate = function(opts) {
+  $.fn.slideUpdate = function(opts, callback) {
     return this.each(function() {
-      new SlideUpdate(this, opts);
+      new SlideUpdate(this, opts, callback);
     });
   }
 
@@ -65,6 +67,6 @@
         this.remove();
       }
     });
-    newElement.slideDown(duration);
+    newElement.slideDown(duration, this.callback);
   };
 })(jQuery, document, window);
