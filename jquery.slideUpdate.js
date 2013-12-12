@@ -44,6 +44,8 @@
     var duration = this.opts.duration;
 
     var oldElement = this.$el;
+    oldElement.wrapInner("<div class='slideupdate'></div>");
+    oldElement = oldElement.find('.slideupdate');
 
     // Create new element
     var newElement;
@@ -65,6 +67,8 @@
       duration: duration,
       complete: function() {
         this.remove();
+        // Remove the 'slideupdate' div
+        newElement.parent().html(newElement.html());
       }
     });
     newElement.slideDown(duration, this.callback);
