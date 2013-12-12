@@ -42,10 +42,11 @@
     var html = this.opts.html;
     var text = this.opts.text;
     var duration = this.opts.duration;
+    var callback = this.callback;
 
-    var oldElement = this.$el;
-    oldElement.wrapInner("<div class='slideupdate'></div>");
-    oldElement = oldElement.find('.slideupdate');
+    var parentElement = this.$el;
+    parentElement.wrapInner("<div class='slideupdate'></div>");
+    var oldElement = parentElement.find('.slideupdate');
 
     // Create new element
     var newElement;
@@ -66,11 +67,19 @@
     oldElement.slideUp({
       duration: duration,
       complete: function() {
-        this.remove();
         // Remove the 'slideupdate' div
-        newElement.parent().html(newElement.html());
+        this.remove();
       }
     });
-    newElement.slideDown(duration, this.callback);
+    newElement.slideDown({
+      duration: duration,
+      complete: function() {
+        // Remove the 'slideupdate' div
+        $(this).replaceWith(newElement.html());
+
+        // Perform callback on parent element
+        $.proxy(callback, parentElement)();
+      }
+    });
   };
 })(jQuery, document, window);
